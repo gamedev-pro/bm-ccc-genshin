@@ -22,13 +22,6 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
 
     private Vector3 moveInput;
 
-    [SerializeField]
-    private bool useExpSmoothing;
-    [SerializeField]
-    private float expSmoothAcceleration = 25f;
-    [SerializeField]
-    private float expSmoothRotationSpeed = 20f;
-
 
     private void Awake()
     {
@@ -50,33 +43,20 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
         if (moveInput != Vector3.zero)
         {
             var targetRot = Quaternion.LookRotation(new Vector3(moveInput.x, 0, moveInput.z), Vector3.up);
-            if (useExpSmoothing)
-            {
-                currentRotation = Quaternion.Slerp(currentRotation, targetRot, 1 - Mathf.Exp(-expSmoothRotationSpeed * deltaTime));
-            }
-            else
-            {
-                currentRotation = Quaternion.Slerp(currentRotation, targetRot, deltaTime * rotationSpeed);
-            }
+            currentRotation = Quaternion.Slerp(
+                currentRotation,
+                targetRot,
+                1 - Mathf.Exp(-rotationSpeed * deltaTime));
         }
     }
 
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {
         var targetVelocity = moveInput * speed;
-
-        if (useExpSmoothing)
-        {
-
-            currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, 1 - Mathf.Exp(-expSmoothAcceleration * deltaTime));
-        }
-        else
-        {
-            currentVelocity = Vector3.MoveTowards(
-                currentVelocity,
-                targetVelocity,
-                deltaTime * acceleration);
-        }
+        currentVelocity = Vector3.Lerp(
+            currentVelocity,
+            targetVelocity,
+            1 - Mathf.Exp(-acceleration * deltaTime));
     }
 
 

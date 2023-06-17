@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using KinematicCharacterController;
 using UnityEngine;
 
@@ -22,11 +21,17 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
 
     private Vector3 moveInput;
 
+    [NonSerialized]
+    private KinematicCharacterMotor motor;
 
+    public Vector3 MoveInput => moveInput;
+    
+    public Vector3 Velocity => motor.Velocity;
+    
     private void Awake()
     {
-        var kinematicMotor = GetComponent<KinematicCharacterMotor>();
-        kinematicMotor.CharacterController = this;
+        motor = GetComponent<KinematicCharacterMotor>();
+        motor.CharacterController = this;
     }
 
     public void SetInputs(in CharacterMovementInputs input)

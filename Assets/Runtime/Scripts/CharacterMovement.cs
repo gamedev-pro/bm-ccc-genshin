@@ -7,39 +7,62 @@ public struct CharacterMovementInputs
     public Vector2 moveInput;
 }
 
+[Serializable]
+public struct MovementParameters
+{
+    public float Speed;
+    public float Acceleration;
+    public float RotationSpeed;
+}
+
 [RequireComponent(typeof(KinematicCharacterMotor))]
 public class CharacterMovement : MonoBehaviour, ICharacterController
 {
-    [SerializeField]
-    private float speed = 10f;
+    public bool IsRunning;
+    public bool IsSprinting;
 
-    [SerializeField]
-    private float acceleration = 25f;
-
-    [SerializeField]
-    private float rotationSpeed = 20f;
+    public MovementParameters WalkParameters;
+    public MovementParameters RunParameters;
+    public MovementParameters SprintParameters;
 
     private Vector3 moveInput;
 
-    [NonSerialized]
-    private KinematicCharacterMotor motor;
+
+    [NonSerialized] private KinematicCharacterMotor motor;
 
     public Vector3 MoveInput => moveInput;
-    
     public Vector3 Velocity => motor.Velocity;
-    
+
+    public MovementParameters CurrentMovementParameters
+    {
+        get
+        {
+            if (IsSprinting)
+            {
+                return SprintParameters;
+            }
+
+            if (IsRunning)
+            {
+                return RunParameters;
+            }
+
+            return WalkParameters;
+        }
+    }
+
     private void Awake()
     {
         motor = GetComponent<KinematicCharacterMotor>();
         motor.CharacterController = this;
     }
 
-    public void SetInputs(in CharacterMovementInputs input)
+    public void SetMovementInput(float horizontal, float vertical)
     {
         moveInput = Vector3.zero;
-        if (input.moveInput != Vector2.zero)
+        if (horizontal != 0 || vertical != 0)
         {
-            moveInput = new Vector3(input.moveInput.x, 0, input.moveInput.y).normalized;
+            moveInput = new Vector3(horizontal, 0, vertical).normalized;
         }
     }
 
@@ -47,25 +70,28 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     {
         if (moveInput != Vector3.zero)
         {
+            var movementParameters = CurrentMovementParameters;
             var targetRot = Quaternion.LookRotation(new Vector3(moveInput.x, 0, moveInput.z), Vector3.up);
             currentRotation = Quaternion.Slerp(
                 currentRotation,
                 targetRot,
-                1 - Mathf.Exp(-rotationSpeed * deltaTime));
+                1 - Mathf.Exp(-movementParameters.RotationSpeed * deltaTime));
         }
     }
 
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {
-        var targetVelocity = moveInput * speed;
+        var movementParameters = CurrentMovementParameters;
+        var targetVelocity = moveInput * movementParameters.Speed;
         currentVelocity = Vector3.Lerp(
             currentVelocity,
             targetVelocity,
-            1 - Mathf.Exp(-acceleration * deltaTime));
+            1 - Mathf.Exp(-movementParameters.RotationSpeed * deltaTime));
     }
 
 
     #region not implemented
+
     public void AfterCharacterUpdate(float deltaTime)
     {
     }
@@ -83,11 +109,13 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     {
     }
 
-    public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
+    public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint,
+        ref HitStabilityReport hitStabilityReport)
     {
     }
 
-    public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
+    public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint,
+        ref HitStabilityReport hitStabilityReport)
     {
     }
 
@@ -95,8 +123,10 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     {
     }
 
-    public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport)
+    public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint,
+        Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport)
     {
     }
+
     #endregion
 }

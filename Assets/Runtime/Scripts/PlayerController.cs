@@ -6,12 +6,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        var h = Input.GetAxisRaw("Horizontal");
-        var v = Input.GetAxisRaw("Vertical");
-
-        characterMovement.SetInputs(new CharacterMovementInputs
+        characterMovement.SetMovementInput(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            moveInput = new Vector2(h, v)
-        });
+            characterMovement.IsRunning = !characterMovement.IsRunning;
+        }
+        characterMovement.IsSprinting = Input.GetKey(KeyCode.LeftShift);
     }
 }

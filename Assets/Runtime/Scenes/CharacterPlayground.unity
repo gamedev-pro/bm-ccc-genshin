@@ -3446,9 +3446,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44da66b55ce96854d89967b4c1e7be6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  acceleration: 15
-  rotationSpeed: 15
+  IsRunning: 0
+  IsSprinting: 0
+  WalkParameters:
+    Speed: 2
+    Acceleration: 10
+    RotationSpeed: 10
+  RunParameters:
+    Speed: 4
+    Acceleration: 15
+    RotationSpeed: 15
+  SprintParameters:
+    Speed: 6.8
+    Acceleration: 15
+    RotationSpeed: 15
 --- !u!114 &204968997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7124,8 +7135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9b74e337ef86d944adf66d1906f11e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TeleportTo: {fileID: 1887326114}
-  <isBeingTeleportedTo>k__BackingField: 0
 --- !u!54 &454696773
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -31169,8 +31178,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9b74e337ef86d944adf66d1906f11e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TeleportTo: {fileID: 454696772}
-  <isBeingTeleportedTo>k__BackingField: 0
 --- !u!54 &1887326115
 Rigidbody:
   m_ObjectHideFlags: 0

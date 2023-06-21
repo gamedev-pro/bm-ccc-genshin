@@ -3448,6 +3448,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsRunning: 0
   IsSprinting: 0
+  Gravity: 30
   WalkParameters:
     Speed: 2
     Acceleration: 10
@@ -3460,6 +3461,9 @@ MonoBehaviour:
     Speed: 6.8
     Acceleration: 15
     RotationSpeed: 15
+  JumpParameters:
+    JumpHeight: 1
+    TimeToApex: 0.2
 --- !u!114 &204968997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3481,7 +3485,7 @@ MonoBehaviour:
   MaxStableSlopeAngle: 60
   StableGroundLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   DiscreteCollisionEvents: 0
   StepHandling: 1
   MaxStepHeight: 0.5
@@ -25045,7 +25049,7 @@ GameObject:
   - component: {fileID: 1553263413}
   - component: {fileID: 1553263412}
   - component: {fileID: 1553263411}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}

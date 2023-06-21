@@ -6,7 +6,12 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        characterMovement.SetMovementInput(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        characterMovement.SetMovementInput(new CharacterMovementInputs()
+        {
+            moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")),
+            WantsToJump = Input.GetKeyDown(KeyCode.Space)
+        });
+        
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             characterMovement.IsRunning = !characterMovement.IsRunning;

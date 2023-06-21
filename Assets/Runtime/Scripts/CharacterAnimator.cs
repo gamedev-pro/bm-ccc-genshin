@@ -1,8 +1,11 @@
+using System;
 using UnityEngine;
 
 public static class CharacterAnimatorParameters
 {
     public static int iMovementMode = Animator.StringToHash("MovementState");
+    public static int bIsJumping = Animator.StringToHash("IsJumping");
+    public static int bIsGrounded = Animator.StringToHash("IsAnimationGrounded");
 }
 
 public class CharacterAnimator : MonoBehaviour
@@ -23,13 +26,19 @@ public class CharacterAnimator : MonoBehaviour
     //     Gliding,
     //     Swimming
     // }
-    
+
     public Animator Animator;
     public CharacterMovement CharacterMovement;
+
+    public float GroundCheckDistance = 0.5f;
 
     private void LateUpdate()
     {
         Animator.SetInteger(CharacterAnimatorParameters.iMovementMode, (int)SelectMovementState());
+        Animator.SetBool(CharacterAnimatorParameters.bIsJumping, CharacterMovement.IsJumping);
+
+        var isAnimatorGrounded = CharacterMovement.CheckGround(GroundCheckDistance) && !CharacterMovement.IsJumping;
+        Animator.SetBool(CharacterAnimatorParameters.bIsGrounded, isAnimatorGrounded);
     }
 
     private MovementState SelectMovementState()
@@ -38,15 +47,24 @@ public class CharacterAnimator : MonoBehaviour
         {
             return MovementState.Idle;
         }
+
         if (CharacterMovement.IsSprinting)
         {
             return MovementState.Sprint;
         }
+
         if (CharacterMovement.IsRunning)
         {
             return MovementState.Run;
         }
+
         return MovementState.Walk;
     }
-    
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(CharacterMovement.transform.position,
+            CharacterMovement.transform.position + Vector3.down * GroundCheckDistance);
+    }
 }

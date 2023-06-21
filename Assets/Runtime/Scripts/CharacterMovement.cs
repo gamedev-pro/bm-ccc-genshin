@@ -22,7 +22,7 @@ public struct JumpParameters
     public float JumpHeight;
     public float TimeToApex;
 
-    [Range(0.01f, 0.5f)] public float JumpRequestExpireDuration;
+    [Range(1, 5)] public int JumpRequestMaxFrames;
 
     public float CalculateJumpSpeed(float gravity)
     {
@@ -43,25 +43,26 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     public JumpParameters JumpParameters;
 
     private Vector3 moveInput;
-    private float wantsToJumpExpireTime;
+    private int wantsToJumpExpireFrame;
+    private float jumpEndTime;
 
     public bool WantsToJump
     {
-        get => Time.time < wantsToJumpExpireTime;
+        get => Time.frameCount < wantsToJumpExpireFrame;
         set
         {
             if (value)
             {
-                wantsToJumpExpireTime = Time.time + JumpParameters.JumpRequestExpireDuration;
+                wantsToJumpExpireFrame = Time.frameCount + JumpParameters.JumpRequestMaxFrames;
             }
             else
             {
-                wantsToJumpExpireTime = -1;
+                wantsToJumpExpireFrame = -1;
             }
         }
     }
 
-    public bool IsJumping => !IsGrounded && Velocity.y > 0;
+    public bool IsJumping => !IsGrounded && Time.time < jumpEndTime;
     public bool IsGrounded => motor.GroundingStatus.IsStableOnGround && !motor.MustUnground();
 
     [NonSerialized] private KinematicCharacterMotor motor;
@@ -125,7 +126,8 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
         var movementParameters = CurrentMovementParameters;
         if (motor.GroundingStatus.IsStableOnGround)
         {
-            var targetVelocity = moveInput * movementParameters.Speed;
+            var projectedInput = motor.GetDirectionTangentToSurface(moveInput, motor.GroundingStatus.GroundNormal);
+            var targetVelocity = projectedInput * movementParameters.Speed;
 
             currentVelocity = Vector3.Lerp(
                 currentVelocity,
@@ -136,6 +138,7 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
             if (WantsToJump)
             {
                 currentVelocity.y = JumpParameters.CalculateJumpSpeed(Gravity);
+                jumpEndTime = Time.time + JumpParameters.TimeToApex;
                 WantsToJump = false;
                 //required so KinematicMotor doesn't snap us to the ground
                 motor.ForceUnground();

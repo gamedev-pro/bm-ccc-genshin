@@ -4,7 +4,8 @@ using UnityEngine;
 
 public struct CharacterMovementInputs
 {
-    public Vector2 moveInput;
+    public Vector2 MoveInput;
+    public Quaternion LookRotation;
     public bool WantsToJump;
 }
 
@@ -97,9 +98,10 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     public void SetMovementInput(in CharacterMovementInputs inputs)
     {
         moveInput = Vector3.zero;
-        if (inputs.moveInput != Vector2.zero)
+        if (inputs.MoveInput != Vector2.zero)
         {
-            moveInput = new Vector3(inputs.moveInput.x, 0, inputs.moveInput.y).normalized;
+            moveInput = new Vector3(inputs.MoveInput.x, 0, inputs.MoveInput.y).normalized;
+            moveInput = motor.GetDirectionTangentToSurface(inputs.LookRotation * moveInput, Vector3.up);
         }
 
         if (inputs.WantsToJump)

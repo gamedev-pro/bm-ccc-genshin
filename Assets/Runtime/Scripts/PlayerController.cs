@@ -6,24 +6,32 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterMovement characterMovement;
     [SerializeField] private CameraController cameraController;
 
+    private InputActions inputActions;
+
+    private void Awake()
+    {
+        inputActions = new InputActions();
+        inputActions.Enable();
+    }
+
     void Update()
     {
-        var moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         characterMovement.SetMovementInput(new CharacterMovementInputs
         {
-            MoveInput = moveInput,
+            MoveInput = inputActions.Game.Move.ReadValue<Vector2>(),
             LookRotation = cameraController.LookRotation,
-            WantsToJump = Input.GetKeyDown(KeyCode.Space)
+            WantsToJump = inputActions.Game.Jump.WasPressedThisFrame()
         });
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (inputActions.Game.ToggleRun.WasPressedThisFrame())
         {
             characterMovement.IsRunning = !characterMovement.IsRunning;
         }
 
-        characterMovement.IsSprinting = Input.GetKey(KeyCode.LeftShift);
+        characterMovement.IsSprinting = inputActions.Game.Sprint.IsPressed();
 
-        cameraController.IncrementLookRotation(new Vector2(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")));
+        var look = inputActions.Game.Look.ReadValue<Vector2>();
+        cameraController.IncrementLookRotation(new Vector2(look.y, look.x));
     }
 
     private void OnApplicationFocus(bool hasFocus)

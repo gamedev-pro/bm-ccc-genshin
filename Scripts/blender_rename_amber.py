@@ -167,7 +167,23 @@ translation_dict = {
     "目": "Eye",
     "服2": "Clothes2",
     "饰": "Decoration",
-    "照れ": "Blush"
+    "照れ": "Blush",
+    "上半身3": "UpperBody3",
+    "下齿": "LowerTeeth",
+    "上齿": "UpperTeeth",
+    "带2x2": "Belt2x2",
+    "带1": "Belt1",
+    "口舌": "MouthTongue",
+    "面具": "Mask",
+    "配饰": "Accessory",
+    "壶": "Pot",
+    "肌1": "Muscle1",
+    "面2": "Face2",
+    "齿": "Teeth",
+    "链": "Chain",
+    "肌2": "Muscle2",
+    "面1": "Face1",
+    "前摆": "FrontHem"
 }
 
 # The following keys follow a pattern and can be generated with a loop
@@ -189,6 +205,48 @@ for i in range(6):
     
 for i in range(6):
     translation_dict.update({f"饰_{i}_1": f"Decoration_{i}_1"})
+
+for i in range(8):
+    for j in range(3):
+        translation_dict.update({f"前摆_{i}_{j}": f"FrontHem_{i}_{j}"})
+
+for i in range(8):
+    for j in range(3):
+        translation_dict.update({f"左后摆_{i}_{j}": f"LeftRearHem_{i}_{j}"})
+
+for i in range(6):
+    translation_dict.update({f"带2_{i}_1": f"Belt2_{i}_1"})
+
+for i in range(7):
+    for j in range(3):
+        translation_dict.update({f"右后摆_{i}_{j}": f"RightRearHem_{i}_{j}"})
+
+for i in range(7):
+    translation_dict.update({f"右侧发_{i}_1": f"RightSideHair_{i}_1"})
+
+for i in range(5):
+    translation_dict.update({f"呆毛_{i}_1": f"Ahoge_{i}_1"})  # Ahoge is a term for a single lock of hair sticking out of the main hairstyle
+
+for i in range(6):
+    translation_dict.update({f"左侧发_{i}_1": f"LeftSideHair_{i}_1"})
+
+for i in range(9):
+    translation_dict.update({f"袖_{i}_1": f"Sleeve_{i}_1"})
+
+for i in range(6):
+    translation_dict.update({f"左带1_{i}_1": f"LeftBelt1_{i}_1"})
+
+for i in range(6):
+    translation_dict.update({f"左带2_{i}_1": f"LeftBelt2_{i}_1"})
+
+for i in range(10):
+    translation_dict.update({f"带1_{i}_1": f"Belt1_{i}_1"})
+
+for i in range(5):
+    translation_dict.update({f"右饰_{i}_1": f"RightDecoration_{i}_1"})
+
+for i in range(5):
+    translation_dict.update({f"左饰_{i}_1": f"LeftDecoration_{i}_1"})
 
 def rename_obj(obj, translation_dict):
     if obj.name in translation_dict:

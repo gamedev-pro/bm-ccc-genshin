@@ -140,7 +140,7 @@ AnimatorStateTransition:
   m_TransitionOffset: 0
   m_ExitTime: 0.765625
   m_HasExitTime: 0
-  m_HasFixedDuration: 0
+  m_HasFixedDuration: 1
   m_InterruptionSource: 2
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
@@ -320,7 +320,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: running
+  m_Name: Running
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -423,19 +423,19 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: IsJumping
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: IsAnimationGrounded
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 1
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -534,9 +534,9 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
-  - {fileID: 4599776934052271161}
   - {fileID: -561044543554373688}
   - {fileID: 7149985256384742689}
+  - {fileID: 4599776934052271161}
   - {fileID: 8154046546401884523}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}

@@ -178,7 +178,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""id"": ""0655dea2-cbf2-4837-942d-24dc2da757ed"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": ""StickDeadzone,ScaleVector2(x=2,y=-2)"",
+                    ""processors"": ""StickDeadzone,ScaleVector2(y=-1)"",
                     ""groups"": ""XBox"",
                     ""action"": ""Look"",
                     ""isComposite"": false,

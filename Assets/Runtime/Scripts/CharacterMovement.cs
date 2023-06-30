@@ -23,7 +23,7 @@ public struct JumpParameters
     public float JumpHeight;
     public float TimeToApex;
 
-    [Range(1, 5)] public int JumpRequestMaxFrames;
+    [Min(0.03f)] public float JumpRequestExpire;
 
     public float CalculateJumpSpeed(float gravity)
     {
@@ -44,21 +44,23 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     public JumpParameters JumpParameters;
 
     private Vector3 moveInput;
-    private int wantsToJumpExpireFrame;
+    private float wantsToJumpExpireTime;
     private float jumpEndTime;
+
+    public bool DisableMovementFromInput;
 
     public bool WantsToJump
     {
-        get => Time.frameCount < wantsToJumpExpireFrame;
+        get => Time.time < wantsToJumpExpireTime;
         set
         {
             if (value)
             {
-                wantsToJumpExpireFrame = Time.frameCount + JumpParameters.JumpRequestMaxFrames;
+                wantsToJumpExpireTime = Time.time + JumpParameters.JumpRequestExpire;
             }
             else
             {
-                wantsToJumpExpireFrame = -1;
+                wantsToJumpExpireTime = -1;
             }
         }
     }
@@ -98,6 +100,11 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     public void SetMovementInput(in CharacterMovementInputs inputs)
     {
         moveInput = Vector3.zero;
+        if (DisableMovementFromInput)
+        {
+            return;
+        }
+
         if (inputs.MoveInput != Vector2.zero)
         {
             moveInput = new Vector3(inputs.MoveInput.x, 0, inputs.MoveInput.y).normalized;
@@ -150,6 +157,13 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
         {
             currentVelocity += Vector3.down * Gravity * deltaTime;
         }
+    }
+
+    public void ForceStop()
+    {
+        moveInput = Vector3.zero;
+        motor.BaseVelocity.x = 0;
+        motor.BaseVelocity.z = 0;
     }
 
     public bool CheckGround(float checkDistance)

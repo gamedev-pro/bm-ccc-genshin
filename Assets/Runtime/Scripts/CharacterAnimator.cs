@@ -6,6 +6,7 @@ public static class CharacterAnimatorParameters
     public static int iMovementMode = Animator.StringToHash("MovementState");
     public static int bIsJumping = Animator.StringToHash("IsJumping");
     public static int bIsGrounded = Animator.StringToHash("IsAnimationGrounded");
+    public static int tHardLand = Animator.StringToHash("HardLand");
 }
 
 public class CharacterAnimator : MonoBehaviour
@@ -31,6 +32,7 @@ public class CharacterAnimator : MonoBehaviour
     public CharacterMovement CharacterMovement;
 
     public float GroundCheckDistance = 0.5f;
+    public float HardLandYSpeed = 2;
 
     private void LateUpdate()
     {
@@ -39,6 +41,11 @@ public class CharacterAnimator : MonoBehaviour
 
         var isAnimatorGrounded = CharacterMovement.CheckGround(GroundCheckDistance) && !CharacterMovement.IsJumping;
         Animator.SetBool(CharacterAnimatorParameters.bIsGrounded, isAnimatorGrounded);
+
+        if (!isAnimatorGrounded && CharacterMovement.Velocity.y < -HardLandYSpeed)
+        {
+            Animator.SetTrigger(CharacterAnimatorParameters.tHardLand);
+        }
     }
 
     private MovementState SelectMovementState()

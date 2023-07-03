@@ -37,6 +37,10 @@ public struct AirborneParameters
 {
     public float Gravity;
     public float MaxFallSpeed;
+    public float MaxSpeedXZ;
+    public float Acceleration;
+    [Range(0, 1)]
+    public float Drag;
 }
 
 [RequireComponent(typeof(KinematicCharacterMotor))]
@@ -46,13 +50,15 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     public bool IsSprinting;
     public bool IsDashing;
 
-    public AirborneParameters DefaultAirborneParameters;
-    public MovementParameters WalkParameters;
+    [Header("Ground Movement")] public MovementParameters WalkParameters;
     public MovementParameters RunParameters;
     public MovementParameters SprintParameters;
     public JumpParameters JumpParameters;
+
     public float DashDuration = 0.2f;
     public MovementParameters DashParameters;
+
+    [Header("Airborne")] public AirborneParameters DefaultAirborneParameters;
     public AirborneParameters GlideParameters;
 
     private Vector3 moveInput;
@@ -192,9 +198,30 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
         }
         else
         {
-            currentVelocity = Vector3.MoveTowards(currentVelocity, Vector3.down * airborneParameters.MaxFallSpeed,
+            var targetVelocityXZ = new Vector2(moveInput.x, moveInput.z) * airborneParameters.MaxSpeedXZ;
+            var currentVelocityXZ = new Vector2(currentVelocity.x, currentVelocity.z);
+
+            currentVelocityXZ = Vector2.Lerp(
+                currentVelocityXZ,
+                targetVelocityXZ,
+                1 - Mathf.Exp(-airborneParameters.Acceleration * deltaTime));
+
+            var vy = Mathf.MoveTowards(currentVelocity.y, -airborneParameters.MaxFallSpeed,
                 airborneParameters.Gravity * deltaTime);
+
+            currentVelocity.x = currentVelocityXZ.x;
+            currentVelocity.y = vy;
+            currentVelocity.z = currentVelocityXZ.y;
+            
+            ApplyDrag(ref currentVelocity.x, airborneParameters.Drag, deltaTime);
+            ApplyDrag(ref currentVelocity.y, airborneParameters.Drag, deltaTime);
+            ApplyDrag(ref currentVelocity.z, airborneParameters.Drag, deltaTime);
         }
+    }
+
+    private void ApplyDrag(ref float n, float drag, float deltaTime)
+    {
+        n *= 1f / (1f + drag * deltaTime);
     }
 
     public void ToggleWantsToGlide()

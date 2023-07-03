@@ -32,6 +32,13 @@ public struct JumpParameters
     }
 }
 
+[Serializable]
+public struct AirborneParameters
+{
+    public float Gravity;
+    public float MaxFallSpeed;
+}
+
 [RequireComponent(typeof(KinematicCharacterMotor))]
 public class CharacterMovement : MonoBehaviour, ICharacterController
 {
@@ -39,19 +46,36 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     public bool IsSprinting;
     public bool IsDashing;
 
-    public float Gravity = 30;
+    public AirborneParameters DefaultAirborneParameters;
     public MovementParameters WalkParameters;
     public MovementParameters RunParameters;
     public MovementParameters SprintParameters;
     public JumpParameters JumpParameters;
     public float DashDuration = 0.2f;
     public MovementParameters DashParameters;
+    public AirborneParameters GlideParameters;
 
     private Vector3 moveInput;
     private float wantsToJumpExpireTime;
     private float jumpEndTime;
 
     public bool DisableMovementFromInput;
+
+    public bool WantsToGlide { get; private set; }
+    public bool IsGliding => WantsToGlide && !IsGrounded;
+
+    public AirborneParameters CurrentAirborneParameters
+    {
+        get
+        {
+            if (IsGliding)
+            {
+                return GlideParameters;
+            }
+
+            return DefaultAirborneParameters;
+        }
+    }
 
     public bool WantsToJump
     {
@@ -85,7 +109,7 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
             {
                 return DashParameters;
             }
-            
+
             if (IsSprinting)
             {
                 return SprintParameters;
@@ -112,7 +136,7 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
         {
             return;
         }
-        
+
         moveInput = Vector3.zero;
 
         if (inputs.MoveInput != Vector2.zero)
@@ -143,6 +167,7 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {
         var movementParameters = CurrentMovementParameters;
+        var airborneParameters = CurrentAirborneParameters;
         if (motor.GroundingStatus.IsStableOnGround)
         {
             var projectedInput = motor.GetDirectionTangentToSurface(moveInput, motor.GroundingStatus.GroundNormal);
@@ -156,17 +181,25 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
             //instant change if jumping
             if (WantsToJump)
             {
-                currentVelocity.y = JumpParameters.CalculateJumpSpeed(Gravity);
+                currentVelocity.y = JumpParameters.CalculateJumpSpeed(airborneParameters.Gravity);
                 jumpEndTime = Time.time + JumpParameters.TimeToApex;
                 WantsToJump = false;
                 //required so KinematicMotor doesn't snap us to the ground
                 motor.ForceUnground();
             }
+
+            WantsToGlide = false;
         }
         else
         {
-            currentVelocity += Vector3.down * Gravity * deltaTime;
+            currentVelocity = Vector3.MoveTowards(currentVelocity, Vector3.down * airborneParameters.MaxFallSpeed,
+                airborneParameters.Gravity * deltaTime);
         }
+    }
+
+    public void ToggleWantsToGlide()
+    {
+        WantsToGlide = !WantsToGlide;
     }
 
     public void ForceStop()
@@ -205,7 +238,7 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
             moveInput = input;
             yield return null;
         }
-        
+
         DisableMovementFromInput = false;
         IsDashing = false;
     }

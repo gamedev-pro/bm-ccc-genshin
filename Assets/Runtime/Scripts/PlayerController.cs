@@ -35,6 +35,11 @@ public class PlayerController : MonoBehaviour
             characterMovement.TryPerformDash();
         }
 
+        if (inputActions.Game.ToggleGlide.WasPressedThisFrame())
+        {
+            characterMovement.ToggleWantsToGlide();
+        }
+
         var look = inputActions.Game.Look.ReadValue<Vector2>();
         cameraController.IncrementLookRotation(new Vector2(look.y, look.x));
     }

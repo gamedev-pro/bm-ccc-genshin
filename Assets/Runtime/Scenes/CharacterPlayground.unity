@@ -3439,7 +3439,9 @@ MonoBehaviour:
   IsRunning: 0
   IsSprinting: 0
   IsDashing: 0
-  Gravity: 30
+  DefaultAirborneParameters:
+    Gravity: 30
+    MaxFallSpeed: 30
   WalkParameters:
     Speed: 2
     Acceleration: 10
@@ -3461,6 +3463,9 @@ MonoBehaviour:
     Speed: 8
     Acceleration: 50
     RotationSpeed: 10
+  GlideParameters:
+    Gravity: 20
+    MaxFallSpeed: 2
   DisableMovementFromInput: 0
 --- !u!114 &204968997
 MonoBehaviour:

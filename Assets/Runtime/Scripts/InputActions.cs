@@ -71,6 +71,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleGlide"",
+                    ""type"": ""Button"",
+                    ""id"": ""b34cf2e8-8dcb-4352-891d-4d3f1e28b647"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -238,6 +247,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9be7555a-41f2-4c37-bc40-5e6416086620"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleGlide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -274,6 +294,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Game_Look = m_Game.FindAction("Look", throwIfNotFound: true);
         m_Game_ToggleRun = m_Game.FindAction("ToggleRun", throwIfNotFound: true);
         m_Game_Sprint = m_Game.FindAction("Sprint", throwIfNotFound: true);
+        m_Game_ToggleGlide = m_Game.FindAction("ToggleGlide", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -340,6 +361,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Look;
     private readonly InputAction m_Game_ToggleRun;
     private readonly InputAction m_Game_Sprint;
+    private readonly InputAction m_Game_ToggleGlide;
     public struct GameActions
     {
         private @InputActions m_Wrapper;
@@ -349,6 +371,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Game_Look;
         public InputAction @ToggleRun => m_Wrapper.m_Game_ToggleRun;
         public InputAction @Sprint => m_Wrapper.m_Game_Sprint;
+        public InputAction @ToggleGlide => m_Wrapper.m_Game_ToggleGlide;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -373,6 +396,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
+            @ToggleGlide.started += instance.OnToggleGlide;
+            @ToggleGlide.performed += instance.OnToggleGlide;
+            @ToggleGlide.canceled += instance.OnToggleGlide;
         }
 
         private void UnregisterCallbacks(IGameActions instance)
@@ -392,6 +418,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
+            @ToggleGlide.started -= instance.OnToggleGlide;
+            @ToggleGlide.performed -= instance.OnToggleGlide;
+            @ToggleGlide.canceled -= instance.OnToggleGlide;
         }
 
         public void RemoveCallbacks(IGameActions instance)
@@ -434,5 +463,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnToggleRun(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+        void OnToggleGlide(InputAction.CallbackContext context);
     }
 }

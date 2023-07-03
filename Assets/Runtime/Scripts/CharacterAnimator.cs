@@ -7,6 +7,7 @@ public static class CharacterAnimatorParameters
     public static int bIsJumping = Animator.StringToHash("IsJumping");
     public static int bIsGrounded = Animator.StringToHash("IsAnimationGrounded");
     public static int bIsDashing = Animator.StringToHash("IsDashing");
+    public static int bIsGliding = Animator.StringToHash("IsGliding");
     public static int tHardLand = Animator.StringToHash("HardLand");
 }
 
@@ -40,6 +41,7 @@ public class CharacterAnimator : MonoBehaviour
         Animator.SetInteger(CharacterAnimatorParameters.iMovementMode, (int)SelectMovementState());
         Animator.SetBool(CharacterAnimatorParameters.bIsJumping, CharacterMovement.IsJumping);
         Animator.SetBool(CharacterAnimatorParameters.bIsDashing, CharacterMovement.IsDashing);
+        Animator.SetBool(CharacterAnimatorParameters.bIsGliding, CharacterMovement.IsGliding);
 
         var isAnimatorGrounded = CharacterMovement.CheckGround(GroundCheckDistance) && !CharacterMovement.IsJumping;
         Animator.SetBool(CharacterAnimatorParameters.bIsGrounded, isAnimatorGrounded);

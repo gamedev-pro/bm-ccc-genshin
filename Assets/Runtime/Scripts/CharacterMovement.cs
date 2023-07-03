@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using KinematicCharacterController;
 using UnityEngine;
 
@@ -36,12 +37,15 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
 {
     public bool IsRunning;
     public bool IsSprinting;
+    public bool IsDashing;
 
     public float Gravity = 30;
     public MovementParameters WalkParameters;
     public MovementParameters RunParameters;
     public MovementParameters SprintParameters;
     public JumpParameters JumpParameters;
+    public float DashDuration = 0.2f;
+    public MovementParameters DashParameters;
 
     private Vector3 moveInput;
     private float wantsToJumpExpireTime;
@@ -77,6 +81,11 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
     {
         get
         {
+            if (IsDashing)
+            {
+                return DashParameters;
+            }
+            
             if (IsSprinting)
             {
                 return SprintParameters;
@@ -99,11 +108,12 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
 
     public void SetMovementInput(in CharacterMovementInputs inputs)
     {
-        moveInput = Vector3.zero;
         if (DisableMovementFromInput)
         {
             return;
         }
+        
+        moveInput = Vector3.zero;
 
         if (inputs.MoveInput != Vector2.zero)
         {
@@ -172,6 +182,32 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
         var groundingReport = default(CharacterGroundingReport);
         motor.ProbeGround(ref pos, motor.TransientRotation, checkDistance, ref groundingReport);
         return groundingReport.FoundAnyGround;
+    }
+
+    public void TryPerformDash()
+    {
+        if (!IsDashing)
+        {
+            IsDashing = true;
+            StartCoroutine(PerformDash());
+        }
+    }
+
+    private IEnumerator PerformDash()
+    {
+        var dashEndTime = Time.time + DashDuration;
+        DisableMovementFromInput = true;
+
+        var input = transform.forward;
+
+        while (Time.time < dashEndTime)
+        {
+            moveInput = input;
+            yield return null;
+        }
+        
+        DisableMovementFromInput = false;
+        IsDashing = false;
     }
 
     #region not implemented

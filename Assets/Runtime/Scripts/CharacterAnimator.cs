@@ -6,6 +6,7 @@ public static class CharacterAnimatorParameters
     public static int iMovementMode = Animator.StringToHash("MovementState");
     public static int bIsJumping = Animator.StringToHash("IsJumping");
     public static int bIsGrounded = Animator.StringToHash("IsAnimationGrounded");
+    public static int bIsDashing = Animator.StringToHash("IsDashing");
     public static int tHardLand = Animator.StringToHash("HardLand");
 }
 
@@ -38,9 +39,11 @@ public class CharacterAnimator : MonoBehaviour
     {
         Animator.SetInteger(CharacterAnimatorParameters.iMovementMode, (int)SelectMovementState());
         Animator.SetBool(CharacterAnimatorParameters.bIsJumping, CharacterMovement.IsJumping);
+        Animator.SetBool(CharacterAnimatorParameters.bIsDashing, CharacterMovement.IsDashing);
 
         var isAnimatorGrounded = CharacterMovement.CheckGround(GroundCheckDistance) && !CharacterMovement.IsJumping;
         Animator.SetBool(CharacterAnimatorParameters.bIsGrounded, isAnimatorGrounded);
+        
 
         if (!isAnimatorGrounded && CharacterMovement.Velocity.y < -HardLandYSpeed)
         {
@@ -55,7 +58,7 @@ public class CharacterAnimator : MonoBehaviour
             return MovementState.Idle;
         }
 
-        if (CharacterMovement.IsSprinting)
+        if (CharacterMovement.IsSprinting || CharacterMovement.IsDashing)
         {
             return MovementState.Sprint;
         }

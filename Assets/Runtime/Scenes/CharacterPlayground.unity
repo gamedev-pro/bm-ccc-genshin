@@ -3438,6 +3438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsRunning: 0
   IsSprinting: 0
+  IsDashing: 0
   Gravity: 30
   WalkParameters:
     Speed: 2
@@ -3455,6 +3456,11 @@ MonoBehaviour:
     JumpHeight: 1
     TimeToApex: 0.4
     JumpRequestExpire: 0.1
+  DashDuration: 0.3
+  DashParameters:
+    Speed: 8
+    Acceleration: 50
+    RotationSpeed: 10
   DisableMovementFromInput: 0
 --- !u!114 &204968997
 MonoBehaviour:

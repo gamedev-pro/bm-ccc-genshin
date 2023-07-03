@@ -30,6 +30,11 @@ public class PlayerController : MonoBehaviour
 
         characterMovement.IsSprinting = inputActions.Game.Sprint.IsPressed();
 
+        if (inputActions.Game.Sprint.WasPressedThisFrame())
+        {
+            characterMovement.TryPerformDash();
+        }
+
         var look = inputActions.Game.Look.ReadValue<Vector2>();
         cameraController.IncrementLookRotation(new Vector2(look.y, look.x));
     }

@@ -21111,22 +21111,22 @@ PrefabInstance:
     - target: {fileID: 6159132166033727167, guid: 0cef5c12bbfabf7479e55e5e600882e6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -41.33
+      value: -40.69
       objectReference: {fileID: 0}
     - target: {fileID: 6159132166033727167, guid: 0cef5c12bbfabf7479e55e5e600882e6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.06
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6159132166033727167, guid: 0cef5c12bbfabf7479e55e5e600882e6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -30.08
+      value: -31.27
       objectReference: {fileID: 0}
     - target: {fileID: 6159132166033727167, guid: 0cef5c12bbfabf7479e55e5e600882e6,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8685479
+      value: 0.6119606
       objectReference: {fileID: 0}
     - target: {fileID: 6159132166033727167, guid: 0cef5c12bbfabf7479e55e5e600882e6,
         type: 3}
@@ -21136,7 +21136,7 @@ PrefabInstance:
     - target: {fileID: 6159132166033727167, guid: 0cef5c12bbfabf7479e55e5e600882e6,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.49560514
+      value: 0.7908883
       objectReference: {fileID: 0}
     - target: {fileID: 6159132166033727167, guid: 0cef5c12bbfabf7479e55e5e600882e6,
         type: 3}
@@ -21146,7 +21146,7 @@ PrefabInstance:
     - target: {fileID: 6159132166033727167, guid: 0cef5c12bbfabf7479e55e5e600882e6,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -59.419
+      value: 104.537
       objectReference: {fileID: 0}
     - target: {fileID: 6235182591523606484, guid: 0cef5c12bbfabf7479e55e5e600882e6,
         type: 3}
@@ -21215,8 +21215,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7112918526024816716, guid: 0cef5c12bbfabf7479e55e5e600882e6,
         type: 3}
+      propertyPath: Gravity
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7112918526024816716, guid: 0cef5c12bbfabf7479e55e5e600882e6,
+        type: 3}
       propertyPath: JumpSpeed
-      value: 10
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7112918526024816716, guid: 0cef5c12bbfabf7479e55e5e600882e6,
+        type: 3}
+      propertyPath: JumpHeight
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

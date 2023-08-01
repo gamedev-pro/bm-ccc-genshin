@@ -4,6 +4,7 @@ using UnityEngine;
 public struct CharacterMovementInput
 {
     public Vector2 MoveInput;
+    public Quaternion LookRotation;
     public bool WantsToJump;
 }
 
@@ -39,7 +40,10 @@ public class CharacterMovement : MonoBehaviour, ICharacterController
         moveInput = Vector3.zero;
         if (input.MoveInput != Vector2.zero)
         {
-            moveInput = new Vector3(input.MoveInput.x, 0, input.MoveInput.y).normalized;
+            moveInput = new Vector3(input.MoveInput.x, 0, input.MoveInput.y);
+            moveInput = input.LookRotation * moveInput;
+            moveInput.y = 0;
+            moveInput.Normalize();
         }
 
         if (input.WantsToJump)
